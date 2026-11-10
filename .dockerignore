@@ -1,0 +1,5 @@
+docker/.env
+docker/data/
+data-ejemplo/
+.git/
+docs/

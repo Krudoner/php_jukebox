@@ -1,0 +1,55 @@
+name: asociacion-jukebox-multiservicio
+
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "127.0.0.1:8091:80"
+    volumes:
+      - ./src:/var/www/html   # Código público (DocumentRoot).
+      - ./data:/var/www/data  # JSON privados, fuera del DocumentRoot.
+    environment:              # Credenciales que lee 11-conexiones.php con getenv.
+      PGUSER: ${PGUSER}
+      PGPASSWORD: ${PGPASSWORD}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_DB: jukebox_pg
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d jukebox_pg"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mariadb:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: jukebox_maria
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+    volumes:
+      - maria_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pg_data:
+  maria_data:

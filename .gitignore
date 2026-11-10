@@ -1,0 +1,5 @@
+# Secretos y datos reales del laboratorio
+docker/.env
+docker/data/
+# Audios: se copian desde el proyecto de cliente (ver README)
+docker/src/audio/*.mp3

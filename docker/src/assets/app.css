@@ -1,0 +1,22 @@
+/* Estilos básicos de las pantallas PHP. Los estilos propios del jukebox de cliente
+   pueden copiarse también en assets/ y enlazarse desde home.php. */
+:root { color-scheme: light dark; --borde: #8884; --error: #c62828; --ok: #2e7d32; }
+body { font-family: system-ui, sans-serif; margin: 0; line-height: 1.5; }
+.barra { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;
+         padding: .75rem 1.5rem; border-bottom: 1px solid var(--borde); }
+.barra nav { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+main { max-width: 60rem; margin: 0 auto; padding: 1rem 1.5rem 3rem; }
+.en-linea { display: inline; }
+.error { color: var(--error); }
+.ok { color: var(--ok); }
+.ficha-form label { display: block; margin-bottom: .9rem; }
+.ficha-form input, .ficha-form select { display: block; margin-top: .25rem; padding: .35rem; min-width: 18rem; max-width: 100%; }
+.fichas .meta { display: block; opacity: .75; font-size: .9em; }
+table.catalogo { border-collapse: collapse; width: 100%; }
+.catalogo th, .catalogo td { border-bottom: 1px solid var(--borde); padding: .4rem .5rem; text-align: left; }
+.jukebox { margin-top: 2rem; padding: 1rem; border: 1px solid var(--borde); border-radius: 8px; }
+.jukebox canvas { width: 100%; max-width: 600px; height: auto; display: block; }
+.pista { font-size: 1.2rem; margin: .75rem 0 .25rem; }
+#song-artist { opacity: .75; margin-left: .5rem; }
+.controles { display: flex; gap: .5rem; flex-wrap: wrap; }
+.lista-jukebox .activa button { font-weight: bold; }
