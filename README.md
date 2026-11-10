@@ -30,8 +30,8 @@ jukebox_php/
 1. Copia `docker/.env.example` a `docker/.env` y cambia las contraseñas de laboratorio.
 2. Copia `data-ejemplo/canciones.json` y `data-ejemplo/usuarios.json` a `docker/data/`.
    Hazlo solo al preparar una copia nueva: nunca sobre datos que quieras conservar.
-3. Copia los 12 MP3 de la carpeta `audio/` del proyecto de cliente (Music_JS) en `docker/src/audio/`.
-   No se incluyen en el repositorio por su tamaño; los nombres deben coincidir con `AUDIOS_PERMITIDOS` en `docker/src/lib/canciones.php`.
+3. Los 12 MP3 ya vienen incluidos en `docker/src/audio/`.
+   Sus nombres deben coincidir con `AUDIOS_PERMITIDOS` en `docker/src/lib/canciones.php`.
 
 ## Arranque
 
