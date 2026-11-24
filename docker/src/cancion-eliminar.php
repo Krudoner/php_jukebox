@@ -17,14 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         paginaError(400, 'El identificador de la canción no es válido.');
     }
     try {
-        actualizarColeccion(RUTA_CANCIONES, function (array &$songs) use ($id): void {
-            $position = buscarPosicion($songs, $id);
-            if ($position === null) {
-                throw new OperacionRechazada('No existe ninguna canción con ese identificador.', 404);
-            }
-            unset($songs[$position]);
-            $songs = array_values($songs); // Índices consecutivos: el JSON sigue siendo una lista.
-        });
+        // Operación compartida con la API: busca por id bajo bloqueo y reindexa con array_values.
+        eliminarCancion($id);
         header('Location: canciones.php', true, 303);
         exit;
     } catch (OperacionRechazada $ex) {

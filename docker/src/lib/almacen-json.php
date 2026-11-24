@@ -134,3 +134,45 @@ function actualizarColeccion(string $ruta, callable $modificar): mixed
         fclose($handle);
     }
 }
+
+// Bloques 16 a 18: operaciones del catálogo compartidas por el CRUD clásico y la API AJAX.
+// Las tres trabajan dentro de actualizarColeccion (un único LOCK_EX para leer, cambiar y guardar)
+// y devuelven la lista ya guardada. Si el id no existe lanzan OperacionRechazada con 404.
+
+// Alta: el id lo calcula PHP (máximo + 1); nunca se acepta uno enviado por el cliente.
+function crearCancion(array $datos): array
+{
+    return actualizarColeccion(RUTA_CANCIONES, function (array &$songs) use ($datos): array {
+        $songs[] = ['id' => siguienteId($songs)] + $datos;
+        return array_values($songs);
+    });
+}
+
+// Edición: se busca la ficha por id sobre los datos recién leídos y se sustituye conservando su id.
+function editarCancion(int $id, array $datos): array
+{
+    return actualizarColeccion(RUTA_CANCIONES, function (array &$songs) use ($id, $datos): array {
+        $position = buscarPosicion($songs, $id);
+        if ($position === null) {
+            // Otra pestaña pudo borrarla: no se vuelve a crear.
+            throw new OperacionRechazada('No existe ninguna canción con ese identificador.', 404);
+        }
+        // $position localiza el elemento; $id identifica la canción.
+        $songs[$position] = ['id' => $id] + $datos;
+        return array_values($songs);
+    });
+}
+
+// Eliminación: quita solo la ficha (el MP3 no se borra) y reindexa sin renumerar los id.
+function eliminarCancion(int $id): array
+{
+    return actualizarColeccion(RUTA_CANCIONES, function (array &$songs) use ($id): array {
+        $position = buscarPosicion($songs, $id);
+        if ($position === null) {
+            throw new OperacionRechazada('No existe ninguna canción con ese identificador.', 404);
+        }
+        unset($songs[$position]);
+        $songs = array_values($songs); // Índices consecutivos: el JSON sigue siendo una lista.
+        return $songs;
+    });
+}

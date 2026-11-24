@@ -13,8 +13,7 @@ function errorCampo(array $errores, string $campo): string
 
 function pintarFormularioCancion(array $valores, array $errores, string $boton, ?int $id = null): void
 {
-    $nombres = ['electronica' => 'Electrónica', 'rock' => 'Rock', 'bandas-sonoras' => 'Bandas sonoras',
-        'hardcore-uptempo' => 'Hardcore Uptempo', 'musica-urbana' => 'Música urbana', 'rawstyle' => 'Rawstyle'];
+    $nombres = NOMBRES_CATEGORIA;
     ?>
     <?php if (isset($errores['general'])): ?>
         <p class="error"><?= e($errores['general']) ?></p>

@@ -6,7 +6,9 @@ declare(strict_types=1);
 require_once __DIR__ . '/sesion.php';
 require_once __DIR__ . '/canciones.php';
 
-function abrirPagina(string $titulo): void
+// $cabeceraExtra: etiquetas ya escapadas que necesita una página concreta en <head>
+// (por ejemplo, la meta csrf-token y el script de la gestión AJAX).
+function abrirPagina(string $titulo, array $cabeceraExtra = []): void
 {
     ?>
 <!DOCTYPE html>
@@ -16,6 +18,10 @@ function abrirPagina(string $titulo): void
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= e($titulo) ?> · <?= e(APP_NAME) ?></title>
     <link rel="stylesheet" href="assets/app.css">
+<?php foreach ($cabeceraExtra as $etiqueta): ?>
+    <?= $etiqueta ?>
+
+<?php endforeach; ?>
 </head>
 <body>
 <header class="barra">
@@ -24,6 +30,7 @@ function abrirPagina(string $titulo): void
         <nav>
             <a href="home.php">Inicio</a>
             <a href="canciones.php">Catálogo</a>
+            <a href="canciones-ajax.php">Gestión AJAX</a>
             <a href="cancion-nueva.php">Nueva canción</a>
             <form method="post" action="logout.php" class="en-linea">
                 <?= campoCsrf() ?>

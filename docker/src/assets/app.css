@@ -20,3 +20,16 @@ table.catalogo { border-collapse: collapse; width: 100%; }
 #song-artist { opacity: .75; margin-left: .5rem; }
 .controles { display: flex; gap: .5rem; flex-wrap: wrap; }
 .lista-jukebox .activa button { font-weight: bold; }
+
+/* Bloques 15 a 19: gestión AJAX. */
+.mensaje { padding: .5rem .75rem; border-left: 4px solid var(--borde); background: #8881; }
+.mensaje.ok { border-color: var(--ok); color: var(--ok); }
+.mensaje.error { border-color: var(--error); color: var(--error); }
+.panel { border: 1px solid var(--borde); border-radius: 8px; padding: .5rem 1rem; margin-bottom: 1.5rem; }
+.panel h2 { margin-top: .5rem; font-size: 1.2rem; }
+.catalogo td.vacio { text-align: center; font-style: italic; padding: 1rem; }
+table.catalogo[aria-busy="true"] { opacity: .6; }
+button:disabled { cursor: not-allowed; }
+#form-cancion { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); column-gap: 1.5rem; }
+#form-cancion h2, #form-cancion p { grid-column: 1 / -1; }
+#form-cancion input, #form-cancion select { width: 100%; min-width: 0; box-sizing: border-box; }

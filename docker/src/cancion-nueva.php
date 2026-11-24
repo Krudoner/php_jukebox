@@ -19,19 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($errores === []) {
         try {
-            actualizarColeccion(RUTA_CANCIONES, function (array &$songs) use ($datos): int {
-                $newId = siguienteId($songs); // Lo calcula PHP, no el navegador.
-                $newSong = [
-                    'id' => $newId,
-                    'title' => $datos['title'],
-                    'artist' => $datos['artist'],
-                    'category' => $datos['category'],
-                    'duration' => $datos['duration'],
-                    'src' => $datos['src'],
-                ];
-                $songs[] = $newSong;
-                return $newId;
-            });
+            // Bloque 16: misma operación de alta que usa la API AJAX (id calculado por PHP).
+            crearCancion($datos);
             header('Location: canciones.php', true, 303);
             exit;
         } catch (JsonException | RuntimeException $ex) {

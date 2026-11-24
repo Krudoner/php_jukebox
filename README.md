@@ -2,6 +2,8 @@
 
 Aplicación de servidor en PHP para el jukebox de la asociación, que integra MUSICFY, el reproductor de 0612 (Howler.js, Tailwind, ecualizador y espectro): registro, inicio de sesión, home privada con el reproductor y CRUD del catálogo musical guardado en archivos JSON.
 
+La ampliación de RA2 añade una gestión del catálogo sin recargas (`canciones-ajax.php`) que usa `fetch` contra una API JSON (`api/catalogo.php`). El CRUD clásico y el reproductor siguen funcionando con el mismo catálogo.
+
 ## Requisitos
 
 - Docker Desktop con Docker Compose.
@@ -14,7 +16,8 @@ Aplicación de servidor en PHP para el jukebox de la asociación, que integra MU
 jukebox_php/
   compose.yaml          Etapa inicial (8090), congelada
   src/                  Pasos 01 a 10 y lib/
-  docs/                 Resúmenes de cada bloque
+  docs/                 Resúmenes de cada bloque (01 a 20)
+  docs/pruebas-api/     Cuerpos JSON para probar api/catalogo.php
   data-ejemplo/         Datos ficticios para preparar una copia nueva
   docker/
     compose.yaml        Etapa ampliada (8091): web, postgres y mariadb
@@ -53,13 +56,26 @@ La etapa inicial se arranca desde la raíz del proyecto con `docker compose up -
 | Ampliada · login | http://localhost:8091/login.php |
 | Ampliada · home | http://localhost:8091/home.php |
 | Ampliada · catálogo | http://localhost:8091/canciones.php |
-| Ampliada · API | http://localhost:8091/api/canciones.php |
+| Ampliada · gestión AJAX | http://localhost:8091/canciones-ajax.php |
+| Ampliada · API del reproductor | http://localhost:8091/api/canciones.php |
+| Ampliada · API de gestión | http://localhost:8091/api/catalogo.php?action=list |
 
 ## Crear la primera cuenta ficticia
 
 1. Abre http://localhost:8091/register.php.
 2. Usa un alias, un correo ficticio (por ejemplo `prueba@jukebox.test`) y una contraseña de laboratorio de 12 a 64 caracteres que no utilices en ningún otro sitio.
 3. Tras el registro se abre el login. Entra con el mismo correo y contraseña.
+
+## API de gestión (api/catalogo.php)
+
+| Acción | Método | Cuerpo JSON | Respuesta correcta |
+|---|---|---|---|
+| `?action=list` | GET | — | 200 `{"ok": true, "data": [...]}` |
+| `?action=create` | POST | title, artist, category, duration, src | 201 y la lista |
+| `?action=update` | POST | id y los cinco campos | 200 y la lista |
+| `?action=delete` | POST | id | 200 y la lista |
+
+Los POST necesitan la sesión, la cabecera `X-CSRF-Token` (el token está en la meta `csrf-token` de `canciones-ajax.php`) y `Content-Type: application/json`. Errores: 400, 401, 403, 404, 405, 415, 422 y 500 con `{"ok": false, "error": "..."}`. El detalle está en `docs/14-peticiones.md`.
 
 ## Requisito de red
 

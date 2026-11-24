@@ -21,7 +21,7 @@ try {
 
 abrirPagina('Catálogo musical');
 ?>
-<p><a href="home.php">Volver a la home</a> · <a href="cancion-nueva.php">Añadir una canción</a></p>
+<p><a href="home.php">Volver a la home</a> · <a href="cancion-nueva.php">Añadir una canción</a> · <a href="canciones-ajax.php">Gestión AJAX (sin recargas)</a></p>
 
 <?php if ($error !== null): ?>
     <p class="error"><?= e($error) ?></p>

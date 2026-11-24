@@ -46,17 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if ($errores === []) {
         try {
-            // Se vuelve a leer y localizar la ficha bajo bloqueo.
-            actualizarColeccion(RUTA_CANCIONES, function (array &$songs) use ($id, $datos): void {
-                foreach ($songs as $position => $song) {
-                    if (is_array($song) && ($song['id'] ?? null) === $id) {
-                        // $position localiza el elemento; $id identifica la canción.
-                        $songs[$position] = ['id' => $id] + $datos;
-                        return;
-                    }
-                }
-                throw new OperacionRechazada('No existe ninguna canción con ese identificador.', 404);
-            });
+            // Se vuelve a leer y localizar la ficha bajo bloqueo (operación compartida con la API).
+            editarCancion($id, $datos);
             header('Location: canciones.php', true, 303);
             exit;
         } catch (OperacionRechazada $ex) {

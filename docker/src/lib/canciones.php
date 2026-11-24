@@ -24,6 +24,16 @@ const AUDIOS_PERMITIDOS = [
     'audio/The Straikerz - Mi Madre.mp3',
 ];
 
+// Nombre visible de cada categoría en los formularios (clásico y AJAX).
+const NOMBRES_CATEGORIA = [
+    'electronica' => 'Electrónica',
+    'rock' => 'Rock',
+    'bandas-sonoras' => 'Bandas sonoras',
+    'hardcore-uptempo' => 'Hardcore Uptempo',
+    'musica-urbana' => 'Música urbana',
+    'rawstyle' => 'Rawstyle',
+];
+
 const MAX_TEXTO_CANCION = 80;
 const DURACION_MAXIMA = 1800;
 
@@ -122,4 +132,36 @@ function validarCancion(array $entrada): array
         'src' => $valores['src'],
     ];
     return [$datos, [], $valores];
+}
+
+// Bloque 16: validación de una ficha recibida como JSON por la API.
+// En JSON la duración llega como número, no como texto: primero se comprueban los tipos
+// y después se aplican exactamente las mismas reglas de valor que en el formulario clásico.
+// Devuelve [datos validados o null, errores por campo].
+function validarCancionJson(array $entrada): array
+{
+    $errores = [];
+    $nombres = ['title' => 'El título', 'artist' => 'El artista', 'category' => 'La categoría', 'src' => 'El archivo de audio'];
+
+    foreach ($nombres as $campo => $nombre) {
+        if (!array_key_exists($campo, $entrada)) {
+            $errores[$campo] = "$nombre es obligatorio.";
+        } elseif (!is_string($entrada[$campo])) {
+            $errores[$campo] = "$nombre debe enviarse como texto.";
+        }
+    }
+    // is_int rechaza "120", 120.5, true y null: la duración debe ser un entero JSON.
+    if (!is_int($entrada['duration'] ?? null)) {
+        $errores['duration'] = 'La duración debe ser un entero entre 1 y ' . DURACION_MAXIMA . ' segundos.';
+    }
+    if ($errores !== []) {
+        return [null, $errores];
+    }
+
+    $entrada['duration'] = (string) $entrada['duration'];
+    [$datos, $errores] = validarCancion($entrada);
+    if (isset($errores['duration'])) {
+        $errores['duration'] = 'La duración debe ser un entero entre 1 y ' . DURACION_MAXIMA . ' segundos.';
+    }
+    return [$datos, $errores];
 }

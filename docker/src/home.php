@@ -35,6 +35,7 @@ require_once __DIR__ . '/lib/canciones.php';
         Hola, <strong class="text-gray-100"><?= e((string) $_SESSION['alias']) ?></strong>
       </span>
       <a href="canciones.php" class="text-red-300 hover:text-red-400">Catálogo musical</a>
+      <a href="canciones-ajax.php" class="text-red-300 hover:text-red-400">Gestión AJAX</a>
       <a href="cancion-nueva.php" class="text-red-300 hover:text-red-400">Añadir canción</a>
       <form method="post" action="logout.php">
         <?= campoCsrf() ?>
